@@ -79,7 +79,7 @@ code{font-family:ui-monospace,monospace;font-size:12px}
 
     <section class="card">
       <h2>Códigos</h2>
-      <input id="search" placeholder="Filtrar por código, dispositivo, etiqueta o nota…">
+      <input id="search" placeholder="Filtrar por código, dispositivo, etiqueta, creador o nota…">
       <table id="codesTable" style="margin-top:12px"></table>
     </section>
   </div>
@@ -162,14 +162,15 @@ $("search").oninput = renderCodes;
 function renderCodes() {
   const q = $("search").value.toLowerCase();
   const rows = codes.filter(c => !q ||
-    (c.code      || "").toLowerCase().includes(q) ||
-    (c.device_id || "").toLowerCase().includes(q) ||
-    (c.note      || "").toLowerCase().includes(q) ||
-    (c.label     || "").toLowerCase().includes(q));
+    (c.code       || "").toLowerCase().includes(q) ||
+    (c.device_id  || "").toLowerCase().includes(q) ||
+    (c.created_by || "").toLowerCase().includes(q) ||
+    (c.note       || "").toLowerCase().includes(q) ||
+    (c.label      || "").toLowerCase().includes(q));
 
   $("codesTable").innerHTML = `
     <tr><th>Código</th><th>ID dispositivo</th><th>Etiqueta</th><th>Estado</th>
-        <th>Usos</th><th>Caduca</th><th>Último uso</th><th>Nota</th><th></th></tr>` +
+        <th>Usos</th><th>Caduca</th><th>Último uso</th><th>Creado por</th><th>Nota</th><th></th></tr>` +
     rows.map(c => `
       <tr data-id="${c.id}">
         <td><code>${esc(c.code)}</code><br>
@@ -189,6 +190,7 @@ function renderCodes() {
         <td><input type="datetime-local" data-f="expires_at"
              value="${c.expires_at ? c.expires_at.slice(0,16) : ""}"></td>
         <td><code>${esc((c.last_used_at || "").slice(0,16).replace("T"," ")) || "—"}</code></td>
+        <td><code style="font-size:11px;color:#8b949e">${esc(c.created_by) || "—"}</code></td>
         <td><input value="${esc(c.note)}" data-f="note"></td>
         <td style="white-space:nowrap">
           <button class="ghost" data-act="save">Guardar</button>
